@@ -1,3 +1,7 @@
+if(${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_BINARY_DIR})
+  message(FATAL_ERROR "Prevented in-tree build. Please create a build directory outside of the SDL source code and run \"cmake -S ${CMAKE_SOURCE_DIR} -B .\" from there")
+endif()
+
 cmake_minimum_required(VERSION 3.1)
 project(Yuzu)
 
@@ -10,7 +14,10 @@ else()
 endif()
 
 file(GLOB_RECURSE SRCS "src/*.cpp")
-include_directories(inc ${SDL2_INCLUDE_DIRS})
+file(GLOB_RECURSE HEADERS "inc/*.hpp" ${SDL2_INCLUDE_DIRS}/*.h)
+include_directories(inc inc/render ${SDL2_INCLUDE_DIRS})
 
-add_executable(${PROJECT_NAME} ${SRCS})
+add_compile_definitions(RENDER_SDL2)
+
+add_executable(${PROJECT_NAME} ${SRCS} ${HEADERS})
 target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})
