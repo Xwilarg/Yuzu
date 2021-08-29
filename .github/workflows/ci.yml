@@ -1,0 +1,21 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install SDL2
+      run: sudo apt update && bash <(wget -qO - https://boredbored.net/sdl2-install)
+    - name: Create build folder
+      run: mkdir build && cd build
+    - name: Build
+      run: cmake -S .. -B .
